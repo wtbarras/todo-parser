@@ -16,9 +16,11 @@ end
 # Print out file contents
 file_array.each do |file|
   puts file.path
+  @line_number = 1
   file.readlines.each do |line|
     if line.include? "@TODO"
-      puts line
+      printf "%d: %s\n", @line_number, line
     end
+    @line_number += 1
   end
 end
