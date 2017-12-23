@@ -2,10 +2,25 @@
 
 # @TODO Add support for unix style arguments e.g. -c <config files>-f <files>
 
+def print_usage()
+  puts "Usage: todo [OPTION]"
+  puts "-f <files>         List of files to parse"
+  puts "-c <config file>   Path to config file"
+  puts "-h                 Print this message"
+end
+
+
 # Get command line arguments
 input_array = ARGV
 input_length = input_array.length
+
+# Print a usage message
+if input_length == 0
+  print_usage()
+end
+
 # Make array to hold file object that will be parsed
+# This won't be the same as input_length once more arguments are added
 file_array = Array.new(input_length)
 
 # Open file objects on specified files
