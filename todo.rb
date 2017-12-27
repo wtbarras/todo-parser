@@ -12,17 +12,44 @@ end
 
 # Function to parse command line input
 def parse_input(input, files)
-  @files_flag = false
+  _config = input.index("-c")
+  _file = input.index("-f")
+
+  # Check to see if files were specified on the command line
+  if _file != nil
+    # Figure out how many files were specified
+    _end = input.length
+    # If no config file is specified, then _config will be nil
+    #   which will not work for the purposes of math
+    _config_not_nil = 0
+    if _config != nil
+      _config_not_nil = _config
+    end
+    if _config_not_nil < input.length && _file < _config_not_nil
+      _end = _config_not_nil
+    end
+    _file_count = _end - _file - 1
+    printf "%d files entered\n", _file_count
+  end
+
+  # Check to see if a config file is being used
+  if _config != nil
+    puts "Config file specified"
+  end
+
+  # All parameters will be handled above
+  # @TODO remove this section once functionality is duplicated above
+  _files_flag = false
   input.each do |argument|
     case argument
     when '-f'
       puts "files"
-      @files_flag = true
+      _files_flag = true
     when '-c'
       puts "config"
-      @files_flag = false
+      _files_flag = false
     else
-      if @files_flag
+      if _files_flag
         printf "File: %s", argument
         files.push(argument)
       end
