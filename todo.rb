@@ -2,6 +2,7 @@
 
 # @TODO Add support for unix style arguments e.g. -c <config files>-f <files>
 
+# Function to print usage message
 def print_usage()
   puts "Usage: todo [OPTION]"
   puts "-f <files>         List of files to parse"
@@ -9,6 +10,25 @@ def print_usage()
   puts "-h                 Print this message"
 end
 
+# Function to parse command line input
+def parse_input(input, files)
+  @files_flag = false
+  input.each do |argument|
+    case argument
+    when '-f'
+      puts "files"
+      @files_flag = true
+    when '-c'
+      puts "config"
+      @files_flag = false
+    else
+      if @files_flag
+        printf "File: %s", argument
+        files.push(argument)
+      end
+    end
+  end
+end
 
 # Get command line arguments
 input_array = ARGV
@@ -20,12 +40,13 @@ if input_length == 0
 end
 
 # Make array to hold file object that will be parsed
-# This won't be the same as input_length once more arguments are added
-file_array = Array.new(input_length)
+file_array = Array.new()
+
+parse_input(input_array, file_array)
 
 # Open file objects on specified files
-for i in 0..input_length-1
-  file_array[i] = File.open(input_array[i])
+for i in 0..file_array.length - 1
+  file_array[i] = File.open(file_array[i])
 end
 
 # Go through each file that was specified
@@ -40,7 +61,7 @@ file_array.each do |file|
       # Strip comment and todo off front of line
       line = line[line.index("@TODO") + 6, line.length - 1]
       # Print line number and message
-      printf "%d: %s\n", @line_number, line
+      printf "%d: %s", @line_number, line
     end
     @line_number += 1
   end
