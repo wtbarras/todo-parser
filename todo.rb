@@ -28,33 +28,31 @@ def parse_input(input, files)
     if _config_not_nil < input.length && _file < _config_not_nil
       _end = _config_not_nil
     end
+    # Number of files specified on the command line after the -f parameter
     _file_count = _end - _file - 1
-    printf "%d files entered\n", _file_count
+
+    # Add file names to files array
+    for i in _file+1.._file+_file_count
+      # puts input[i]
+      files.push(input[i])
+    end
   end
 
   # Check to see if a config file is being used
   if _config != nil
-    puts "Config file specified"
-  end
-
-  # All parameters will be handled above
-  # @TODO remove this section once functionality is duplicated above
-  _files_flag = false
-  input.each do |argument|
-    case argument
-    when '-f'
-      puts "files"
-      _files_flag = true
-    when '-c'
-      puts "config"
-      _files_flag = false
-    else
-      if _files_flag
-        printf "File: %s", argument
-        files.push(argument)
+    # Open config file
+    _config_file = File.open(input[_config + 1])
+    # Go through each line in the config file
+    _config_file.readlines.each do |line|
+      # @TODO add support for comments in config file
+      # Check to make sure this file isn't already in the list before adding it
+      _file_name = line.strip
+      if files.index(_file_name) == nil
+        files.push(_file_name)
       end
     end
   end
+
 end
 
 # Get command line arguments
@@ -73,7 +71,7 @@ parse_input(input_array, file_array)
 
 # Open file objects on specified files
 for i in 0..file_array.length - 1
-  file_array[i] = File.open(file_array[i])
+  file_array[i] = File.open(file_array[i].strip)
 end
 
 # Go through each file that was specified
