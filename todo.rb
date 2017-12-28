@@ -15,6 +15,10 @@ def parse_input(input, files)
   _config = input.index("-c")
   _file = input.index("-f")
 
+  if input.index("-h") != nil
+    print_usage()
+  end
+
   # Check to see if files were specified on the command line
   if _file != nil
     # Figure out how many files were specified
